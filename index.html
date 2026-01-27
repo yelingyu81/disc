@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISC性格评测</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#6366F1',
+                        accent: '#8B5CF6',
+                        discD: '#EF4444',
+                        discI: '#F59E0B',
+                        discS: '#10B981',
+                        discC: '#3B82F6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                    <i class="fa fa-line-chart text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold text-gray-800">DISC性格评测</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#intro" class="text-gray-600 hover:text-primary transition-all-300">关于评测</a>
+                <a href="#questionnaire" class="text-gray-600 hover:text-primary transition-all-300">开始评测</a>
+                <a href="#results" class="text-gray-600 hover:text-primary transition-all-300">评测结果</a>
+            </div>
+            <button class="md:hidden text-gray-600">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="bg-gradient-to-r from-primary to-secondary text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-shadow">了解你的性格类型</h2>
+            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">通过DISC性格评测，发现你的行为风格和优势，更好地理解自己和他人</p>
+            <a href="#questionnaire" class="bg-white text-primary font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition-all-300 shadow-lg">
+                开始评测
+            </a>
+        </div>
+    </section>
+
+    <!-- 关于DISC评测 -->
+    <section id="intro" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl md:text-3xl font-bold text-center mb-12 text-gray-800">什么是DISC评测？</h3>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <p class="text-gray-600 mb-4">DISC是一种基于行为的性格评测工具，通过四个维度来描述人的行为风格：</p>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-discD flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="font-bold text-white">D</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">支配型 (Dominance)</h4>
+                                <p class="text-gray-600">直接、果断、结果导向</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-discI flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="font-bold text-white">I</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">影响型 (Influence)</h4>
+                                <p class="text-gray-600">热情、外向、善于沟通</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-discS flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="font-bold text-white">S</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">稳健型 (Steadiness)</h4>
+                                <p class="text-gray-600">可靠、耐心、团队合作</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-discC flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="font-bold text-white">C</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">谨慎型 (Conscientiousness)</h4>
+                                <p class="text-gray-600">精确、分析、注重细节</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-6 shadow-md">
+                    <h4 class="font-bold text-gray-800 mb-4">评测流程</h4>
+                    <ol class="space-y-3">
+                        <li class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">1</div>
+                            <span class="text-gray-600">回答20道性格倾向问题</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">2</div>
+                            <span class="text-gray-600">系统自动分析你的回答</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">3</div>
+                            <span class="text-gray-600">生成详细的性格分析报告</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">4</div>
+                            <span class="text-gray-600">了解你的优势和发展建议</span>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 评测问卷 -->
+    <section id="questionnaire" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-800">DISC性格评测问卷</h3>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">请根据你的真实情况，选择最符合你行为风格的选项。回答没有对错之分，只需选择最能代表你的选项。</p>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6 md:p-8">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-gray-800">问卷进度</h4>
+                        <span id="progress-text" class="text-primary font-medium">1/20</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 5%"></div>
+                    </div>
+                </div>
+                
+                <form id="disc-form">
+                    <div id="questions-container">
+                        <!-- 问题将通过JavaScript动态生成 -->
+                    </div>
+                    
+                    <div class="flex justify-between mt-8">
+                        <button type="button" id="prev-btn" class="bg-gray-200 text-gray-700 font-medium py-2 px-6 rounded-lg hover:bg-gray-300 transition-all-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            上一题
+                        </button>
+                        <button type="button" id="next-btn" class="bg-primary text-white font-medium py-2 px-6 rounded-lg hover:bg-primary/90 transition-all-300">
+                            下一题
+                        </button>
+                        <button type="submit" id="submit-btn" class="bg-secondary text-white font-medium py-2 px-6 rounded-lg hover:bg-secondary/90 transition-all-300 hidden">
+                            提交评测
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 评测结果 -->
+    <section id="results" class="py-16 bg-white hidden">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-800">你的DISC性格分析报告</h3>
+            
+            <div class="max-w-5xl mx-auto">
+                <!-- 结果概览 -->
+                <div class="bg-gray-50 rounded-xl p-6 md:p-8 mb-12">
+                    <h4 class="font-bold text-gray-800 mb-6">性格类型概览</h4>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <canvas id="disc-chart" width="400" height="400"></canvas>
+                        </div>
+                        <div>
+                            <div id="personality-type" class="mb-6">
+                                <h5 class="text-lg font-bold text-gray-800 mb-2">你的主要性格类型</h5>
+                                <div id="type-result" class="text-2xl font-bold text-primary"></div>
+                            </div>
+                            <div id="strengths" class="mb-6">
+                                <h5 class="text-lg font-bold text-gray-800 mb-2">你的优势</h5>
+                                <ul id="strengths-list" class="list-disc list-inside text-gray-600 space-y-1"></ul>
+                            </div>
+                            <div id="suggestions">
+                                <h5 class="text-lg font-bold text-gray-800 mb-2">发展建议</h5>
+                                <ul id="suggestions-list" class="list-disc list-inside text-gray-600 space-y-1"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 详细分析 -->
+                <div class="space-y-8">
+                    <div id="detailed-analysis" class="bg-gray-50 rounded-xl p-6 md:p-8">
+                        <h4 class="font-bold text-gray-800 mb-4">详细分析</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="p-4 bg-white rounded-lg shadow-sm">
+                                    <h5 class="font-bold text-discD mb-2">支配型 (D)</h5>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                        <div id="d-score-bar" class="bg-discD h-2.5 rounded-full"></div>
+                                    </div>
+                                    <p id="d-description" class="text-gray-600 text-sm"></p>
+                                </div>
+                                <div class="p-4 bg-white rounded-lg shadow-sm">
+                                    <h5 class="font-bold text-discI mb-2">影响型 (I)</h5>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                        <div id="i-score-bar" class="bg-discI h-2.5 rounded-full"></div>
+                                    </div>
+                                    <p id="i-description" class="text-gray-600 text-sm"></p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="p-4 bg-white rounded-lg shadow-sm">
+                                    <h5 class="font-bold text-discS mb-2">稳健型 (S)</h5>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                        <div id="s-score-bar" class="bg-discS h-2.5 rounded-full"></div>
+                                    </div>
+                                    <p id="s-description" class="text-gray-600 text-sm"></p>
+                                </div>
+                                <div class="p-4 bg-white rounded-lg shadow-sm">
+                                    <h5 class="font-bold text-discC mb-2">谨慎型 (C)</h5>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                        <div id="c-score-bar" class="bg-discC h-2.5 rounded-full"></div>
+                                    </div>
+                                    <p id="c-description" class="text-gray-600 text-sm"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button id="retake-btn" class="bg-primary text-white font-medium py-2 px-6 rounded-lg hover:bg-primary/90 transition-all-300">
+                            重新评测
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="font-bold text-lg mb-4">DISC性格评测</h4>
+                    <p class="text-gray-400">帮助你了解自己的性格类型，发挥优势，实现个人成长。</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">快速链接</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#intro" class="hover:text-white transition-all-300">关于评测</a></li>
+                        <li><a href="#questionnaire" class="hover:text-white transition-all-300">开始评测</a></li>
+                        <li><a href="#results" class="hover:text-white transition-all-300">评测结果</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">联系我们</h4>
+                    <p class="text-gray-400 mb-2">如有任何问题，欢迎联系我们。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-all-300">
+                            <i class="fa fa-envelope text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-all-300">
+                            <i class="fa fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-all-300">
+                            <i class="fa fa-weibo text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2026 DISC性格评测. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DISC评测问题
+        const questions = [
+            {
+                id: 1,
+                text: "在团队中，我更倾向于：",
+                options: [
+                    { text: "直接提出自己的想法和建议", type: "D" },
+                    { text: "积极参与讨论，活跃团队气氛", type: "I" },
+                    { text: "倾听他人意见，支持团队决定", type: "S" },
+                    { text: "分析问题，提供详细的解决方案", type: "C" }
+                ]
+            },
+            {
+                id: 2,
+                text: "面对工作压力时，我通常会：",
+                options: [
+                    { text: "快速采取行动，解决问题", type: "D" },
+                    { text: "寻求他人的支持和鼓励", type: "I" },
+                    { text: "保持冷静，按部就班地完成任务", type: "S" },
+                    { text: "仔细分析压力源，制定应对策略", type: "C" }
+                ]
+            },
+            {
+                id: 3,
+                text: "在社交场合中，我更像是：",
+                options: [
+                    { text: "主动与人交流，主导谈话", type: "D" },
+                    { text: "热情开朗，善于结识新朋友", type: "I" },
+                    { text: "安静倾听，与熟悉的人深入交流", type: "S" },
+                    { text: "观察周围环境，选择性地参与交流", type: "C" }
+                ]
+            },
+            {
+                id: 4,
+                text: "当需要做决定时，我通常会：",
+                options: [
+                    { text: "迅速做出决定，采取行动", type: "D" },
+                    { text: "考虑他人的意见，寻求共识", type: "I" },
+                    { text: "权衡利弊，谨慎做出决定", type: "S" },
+                    { text: "收集充分信息，分析后再决定", type: "C" }
+                ]
+            },
+            {
+                id: 5,
+                text: "在完成任务时，我更注重：",
+                options: [
+                    { text: "任务的结果和效率", type: "D" },
+                    { text: "完成任务的过程和团队合作", type: "I" },
+                    { text: "任务的质量和稳定性", type: "S" },
+                    { text: "任务的准确性和细节", type: "C" }
+                ]
+            },
+            {
+                id: 6,
+                text: "当与他人意见不合时，我会：",
+                options: [
+                    { text: "直接表达自己的观点，争取说服对方", type: "D" },
+                    { text: "尝试理解对方的立场，寻找共同点", type: "I" },
+                    { text: "避免冲突，保持和谐的关系", type: "S" },
+                    { text: "分析双方的观点，寻找客观的解决方案", type: "C" }
+                ]
+            },
+            {
+                id: 7,
+                text: "在工作中，我更喜欢：",
+                options: [
+                    { text: "有挑战性的任务，能够发挥领导作用", type: "D" },
+                    { text: "多样化的任务，与不同的人合作", type: "I" },
+                    { text: "稳定的任务，有明确的工作流程", type: "S" },
+                    { text: "需要专注和精确的任务", type: "C" }
+                ]
+            },
+            {
+                id: 8,
+                text: "我的时间管理风格是：",
+                options: [
+                    { text: "高效利用时间，优先处理重要任务", type: "D" },
+                    { text: "灵活安排时间，适应不同的情况", type: "I" },
+                    { text: "按计划行事，确保任务按时完成", type: "S" },
+                    { text: "详细规划时间，确保每一步都准确无误", type: "C" }
+                ]
+            },
+            {
+                id: 9,
+                text: "当面对变化时，我通常会：",
+                options: [
+                    { text: "积极适应变化，寻找新的机会", type: "D" },
+                    { text: "乐观面对变化，与他人分享想法", type: "I" },
+                    { text: "谨慎对待变化，需要时间适应", type: "S" },
+                    { text: "分析变化的影响，制定应对计划", type: "C" }
+                ]
+            },
+            {
+                id: 10,
+                text: "在团队合作中，我更愿意：",
+                options: [
+                    { text: "担任领导角色，指导团队方向", type: "D" },
+                    { text: "协调团队关系，促进沟通", type: "I" },
+                    { text: "支持团队成员，完成分配的任务", type: "S" },
+                    { text: "提供专业建议，确保任务质量", type: "C" }
+                ]
+            },
+            {
+                id: 11,
+                text: "当我需要表达自己的想法时，我会：",
+                options: [
+                    { text: "直接明了地表达，不绕弯子", type: "D" },
+                    { text: "生动形象地表达，吸引他人注意", type: "I" },
+                    { text: "温和委婉地表达，考虑他人感受", type: "S" },
+                    { text: "逻辑清晰地表达，提供具体证据", type: "C" }
+                ]
+            },
+            {
+                id: 12,
+                text: "在解决问题时，我更倾向于：",
+                options: [
+                    { text: "采取直接的方法，快速解决问题", type: "D" },
+                    { text: "寻求他人的帮助和建议", type: "I" },
+                    { text: "遵循已有的经验和方法", type: "S" },
+                    { text: "系统分析问题，找出根本原因", type: "C" }
+                ]
+            },
+            {
+                id: 13,
+                text: "我的学习风格是：",
+                options: [
+                    { text: "通过实践和尝试来学习", type: "D" },
+                    { text: "通过与他人交流和讨论来学习", type: "I" },
+                    { text: "通过观察和模仿来学习", type: "S" },
+                    { text: "通过阅读和研究来学习", type: "C" }
+                ]
+            },
+            {
+                id: 14,
+                text: "在评价他人时，我更看重：",
+                options: [
+                    { text: "能力和成就", type: "D" },
+                    { text: "性格和人际关系", type: "I" },
+                    { text: "可靠性和责任心", type: "S" },
+                    { text: "专业知识和技能", type: "C" }
+                ]
+            },
+            {
+                id: 15,
+                text: "当我设定目标时，我会：",
+                options: [
+                    { text: "设定具有挑战性的目标，努力实现", type: "D" },
+                    { text: "设定明确的目标，与他人分享", type: "I" },
+                    { text: "设定实际的目标，稳步前进", type: "S" },
+                    { text: "设定详细的目标，制定具体的计划", type: "C" }
+                ]
+            },
+            {
+                id: 16,
+                text: "在工作环境中，我更喜欢：",
+                options: [
+                    { text: "竞争激烈的环境，能够展示能力", type: "D" },
+                    { text: "轻松愉快的环境，与同事关系融洽", type: "I" },
+                    { text: "稳定有序的环境，工作压力适中", type: "S" },
+                    { text: "安静专注的环境，能够集中精力", type: "C" }
+                ]
+            },
+            {
+                id: 17,
+                text: "当我收到反馈时，我会：",
+                options: [
+                    { text: "关注反馈中的关键信息，迅速调整", type: "D" },
+                    { text: "感谢反馈，与他人讨论改进方法", type: "I" },
+                    { text: "认真考虑反馈，逐步改进", type: "S" },
+                    { text: "分析反馈的合理性，制定详细的改进计划", type: "C" }
+                ]
+            },
+            {
+                id: 18,
+                text: "我的决策风格是：",
+                options: [
+                    { text: "果断决策，敢于冒险", type: "D" },
+                    { text: "民主决策，考虑他人意见", type: "I" },
+                    { text: "保守决策，避免风险", type: "S" },
+                    { text: "理性决策，基于数据和分析", type: "C" }
+                ]
+            },
+            {
+                id: 19,
+                text: "在团队中，我通常会：",
+                options: [
+                    { text: "推动团队前进，确保目标实现", type: "D" },
+                    { text: "激发团队士气，增强凝聚力", type: "I" },
+                    { text: "默默付出，支持团队运作", type: "S" },
+                    { text: "确保团队工作的质量和准确性", type: "C" }
+                ]
+            },
+            {
+                id: 20,
+                text: "当我需要休息放松时，我更喜欢：",
+                options: [
+                    { text: "参加有挑战性的活动，如运动或冒险", type: "D" },
+                    { text: "与朋友聚会，享受社交活动", type: "I" },
+                    { text: "在家休息，享受安静的时光", type: "S" },
+                    { text: "阅读或学习新知识，充实自己", type: "C" }
+                ]
+            }
+        ];
+
+        // 性格类型描述
+        const personalityTypes = {
+            D: {
+                name: "支配型 (Dominance)",
+                description: "你是一个直接、果断、结果导向的人。你喜欢挑战，善于领导，能够迅速做出决策并采取行动。你注重效率和成果，有强烈的竞争意识和目标导向。",
+                strengths: ["果断决策", "领导能力", "目标导向", "抗压能力强", "行动力强"],
+                suggestions: ["学会倾听他人意见", "注重团队合作", "适当放慢节奏", "关注细节"]
+            },
+            I: {
+                name: "影响型 (Influence)",
+                description: "你是一个热情、外向、善于沟通的人。你喜欢与人交往，善于表达自己的想法，能够激发他人的热情。你注重人际关系，乐观开朗，充满活力。",
+                strengths: ["沟通能力强", "人际关系好", "乐观积极", "创造力强", "适应能力强"],
+                suggestions: ["增强专注力", "提高执行力", "注重细节", "学会接受批评"]
+            },
+            S: {
+                name: "稳健型 (Steadiness)",
+                description: "你是一个可靠、耐心、团队合作的人。你注重稳定性和和谐的关系，善于倾听他人意见，能够为团队提供支持。你工作认真负责，有很强的责任心。",
+                strengths: ["可靠性强", "团队合作", "耐心细致", "情绪稳定", "责任心强"],
+                suggestions: ["增强决策能力", "勇于表达自己", "适应变化", "设定更高目标"]
+            },
+            C: {
+                name: "谨慎型 (Conscientiousness)",
+                description: "你是一个精确、分析、注重细节的人。你喜欢思考和分析问题，注重逻辑和准确性，能够提供专业的建议。你工作认真细致，追求完美。",
+                strengths: ["分析能力强", "注重细节", "逻辑思维", "专业知识扎实", "严谨认真"],
+                suggestions: ["增强灵活性", "学会授权", "注重效率", "改善人际关系"]
+            }
+        };
+
+        // 当前问题索引
+        let currentQuestionIndex = 0;
+        // 存储用户回答
+        const userAnswers = {};
+        // 存储最终得分
+        let scores = { D: 0, I: 0, S: 0, C: 0 };
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            renderQuestion(currentQuestionIndex);
+            setupEventListeners();
+        });
+
+        // 渲染问题
+        function renderQuestion(index) {
+            const question = questions[index];
+            const container = document.getElementById('questions-container');
+            
+            container.innerHTML = `
+                <div class="question">
+                    <h5 class="font-bold text-gray-800 mb-4">问题 ${question.id}：${question.text}</h5>
+                    <div class="space-y-3">
+                        ${question.options.map((option, i) => `
+                            <div class="option">
+                                <input type="radio" id="option-${question.id}-${i}" name="question-${question.id}" value="${option.type}" class="hidden" ${userAnswers[question.id] === option.type ? 'checked' : ''}>
+                                <label for="option-${question.id}-${i}" class="flex items-center p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300 ${userAnswers[question.id] === option.type ? 'border-primary bg-primary/5' : 'border-gray-200'}">
+                                    <div class="w-6 h-6 border-2 ${userAnswers[question.id] === option.type ? 'border-primary' : 'border-gray-300'} rounded-full flex items-center justify-center mr-3">
+                                        ${userAnswers[question.id] === option.type ? '<div class="w-3 h-3 bg-primary rounded-full"></div>' : ''}
+                                    </div>
+                                    <span class="text-gray-700">${option.text}</span>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // 更新进度
+            updateProgress(index);
+            
+            // 更新按钮状态
+            updateButtonStates(index);
+            
+            // 添加选项点击事件
+            document.querySelectorAll('.option input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const questionId = this.name.split('-')[1];
+                    const value = this.value;
+                    userAnswers[questionId] = value;
+                    
+                    // 更新选项样式
+                    const options = this.parentElement.parentElement.querySelectorAll('.option');
+                    options.forEach(option => {
+                        const label = option.querySelector('label');
+                        const radio = option.querySelector('input');
+                        
+                        if (radio.checked) {
+                            label.classList.remove('border-gray-200');
+                            label.classList.add('border-primary', 'bg-primary/5');
+                            label.querySelector('.w-6').classList.remove('border-gray-300');
+                            label.querySelector('.w-6').classList.add('border-primary');
+                            label.querySelector('.w-6').innerHTML = '<div class="w-3 h-3 bg-primary rounded-full"></div>';
+                        } else {
+                            label.classList.remove('border-primary', 'bg-primary/5');
+                            label.classList.add('border-gray-200');
+                            label.querySelector('.w-6').classList.remove('border-primary');
+                            label.querySelector('.w-6').classList.add('border-gray-300');
+                            label.querySelector('.w-6').innerHTML = '';
+                        }
+                    });
+                });
+            });
+            
+            // 为label添加点击事件，确保点击label也能触发input的change事件
+            document.querySelectorAll('.option label').forEach(label => {
+                label.addEventListener('click', function() {
+                    const inputId = this.getAttribute('for');
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        input.click();
+                    }
+                });
+            });
+        }
+
+        // 更新进度
+        function updateProgress(index) {
+            const progressPercent = ((index + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').textContent = `${index + 1}/${questions.length}`;
+        }
+
+        // 更新按钮状态
+        function updateButtonStates(index) {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            prevBtn.disabled = index === 0;
+            
+            if (index === questions.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 上一题按钮
+            document.getElementById('prev-btn').addEventListener('click', function() {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    renderQuestion(currentQuestionIndex);
+                }
+            });
+            
+            // 下一题按钮
+            document.getElementById('next-btn').addEventListener('click', function() {
+                // 检查是否已回答当前问题
+                const currentQuestion = questions[currentQuestionIndex];
+                if (!userAnswers[currentQuestion.id]) {
+                    alert('请选择一个选项');
+                    return;
+                }
+                
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    renderQuestion(currentQuestionIndex);
+                }
+            });
+            
+            // 提交按钮
+            document.getElementById('disc-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 检查是否所有问题都已回答
+                for (let i = 0; i < questions.length; i++) {
+                    if (!userAnswers[questions[i].id]) {
+                        alert('请回答所有问题');
+                        return;
+                    }
+                }
+                
+                // 计算得分
+                calculateScores();
+                
+                // 显示结果
+                showResults();
+            });
+            
+            // 重新评测按钮
+            document.getElementById('retake-btn').addEventListener('click', function() {
+                // 重置评测
+                resetAssessment();
+                
+                // 滚动到问卷部分
+                document.getElementById('questionnaire').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // 计算得分
+        function calculateScores() {
+            // 重置得分
+            scores = { D: 0, I: 0, S: 0, C: 0 };
+            
+            // 统计得分
+            for (const questionId in userAnswers) {
+                const type = userAnswers[questionId];
+                scores[type]++;
+            }
+        }
+
+        // 显示结果
+        function showResults() {
+            // 隐藏问卷部分，显示结果部分
+            document.getElementById('questionnaire').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            
+            // 计算主要性格类型
+            const mainType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const personality = personalityTypes[mainType];
+            
+            // 显示主要性格类型
+            document.getElementById('type-result').textContent = personality.name;
+            
+            // 显示优势
+            const strengthsList = document.getElementById('strengths-list');
+            strengthsList.innerHTML = personality.strengths.map(strength => `<li>${strength}</li>`).join('');
+            
+            // 显示建议
+            const suggestionsList = document.getElementById('suggestions-list');
+            suggestionsList.innerHTML = personality.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('');
+            
+            // 更新详细分析
+            updateDetailedAnalysis();
+            
+            // 创建雷达图
+            createRadarChart();
+            
+            // 滚动到结果部分
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 更新详细分析
+        function updateDetailedAnalysis() {
+            // 更新D维度
+            document.getElementById('d-score-bar').style.width = `${(scores.D / 20) * 100}%`;
+            document.getElementById('d-description').textContent = personalityTypes.D.description;
+            
+            // 更新I维度
+            document.getElementById('i-score-bar').style.width = `${(scores.I / 20) * 100}%`;
+            document.getElementById('i-description').textContent = personalityTypes.I.description;
+            
+            // 更新S维度
+            document.getElementById('s-score-bar').style.width = `${(scores.S / 20) * 100}%`;
+            document.getElementById('s-description').textContent = personalityTypes.S.description;
+            
+            // 更新C维度
+            document.getElementById('c-score-bar').style.width = `${(scores.C / 20) * 100}%`;
+            document.getElementById('c-description').textContent = personalityTypes.C.description;
+        }
+
+        // 创建雷达图
+        function createRadarChart() {
+            const ctx = document.getElementById('disc-chart').getContext('2d');
+            
+            // 销毁现有图表
+            if (window.discChart) {
+                window.discChart.destroy();
+            }
+            
+            // 创建新图表
+            window.discChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['支配型 (D)', '影响型 (I)', '稳健型 (S)', '谨慎型 (C)'],
+                    datasets: [{
+                        label: '你的得分',
+                        data: [scores.D, scores.I, scores.S, scores.C],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 20
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // 重置评测
+        function resetAssessment() {
+            // 重置用户回答
+            Object.keys(userAnswers).forEach(key => {
+                delete userAnswers[key];
+            });
+            
+            // 重置当前问题索引
+            currentQuestionIndex = 0;
+            
+            // 重置得分
+            scores = { D: 0, I: 0, S: 0, C: 0 };
+            
+            // 渲染第一个问题
+            renderQuestion(0);
+            
+            // 显示问卷部分，隐藏结果部分
+            document.getElementById('questionnaire').classList.remove('hidden');
+            document.getElementById('results').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
